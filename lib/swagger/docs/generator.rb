@@ -78,7 +78,7 @@ module Swagger
               resources << generate_resource(ret[:path], ret[:apis], ret[:models], settings, root, config, ret[:klass].swagger_config)
               debased_path = get_debased_path(ret[:path], settings[:controller_base_path])
               resource_api = {
-                path: "/#{Config.transform_path(trim_leading_slash(debased_path), api_version)}.{format}",
+                path: "#{fixup_http_path(debased_path, api_version)}.{format}",
                 description: ret[:klass].swagger_config[:description]
               }
               root[:apis] << resource_api
@@ -90,6 +90,12 @@ module Swagger
         end
 
         private
+
+        def fixup_http_path(debased_path, api_version)
+          path = "#{Config.transform_path(trim_leading_slash(debased_path), api_version)}"
+          return path if path.match(/^https?:\/\//)
+          "/#{path}"
+        end
 
         def transform_spec_to_api_path(spec, controller_base_path, extension)
           api_path = spec.to_s.dup

@@ -1,3 +1,6 @@
+## 0.2.10
+- Fix issue where setting a URL when overriding `transform_path` results in a `/` preceding the `http://`
+
 ## 0.2.9
 
 Fix gem dependencies to support Rails 5 #141
